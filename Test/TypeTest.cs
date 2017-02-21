@@ -79,6 +79,22 @@ namespace AnimalShelter
       //Assert
       Assert.Equal(testType, foundType);
     }
+    [Fact]
+    public void Test_GetAnimals_RetrievesAllAnimalswithType()
+    {
+      Type testType = new Type("Dog");
+      testType.Save();
+
+      Animal firstAnimal = new Animal ("Bob", "Male", "01.02.2017", "Corgi", testType.GetId());
+      firstAnimal.Save();
+      Animal secondAnimal = new Animal ("Sally", "Female", "02.03.2017", "English Bulldog", testType.GetId());
+      secondAnimal.Save();
+
+      List<Animal> testAnimalList = new List<Animal> {firstAnimal, secondAnimal};
+      List<Animal> resultAnimalList = testType.GetAnimals();
+
+      Assert.Equal(testAnimalList, resultAnimalList);
+    }
 
     public void Dispose()
     {
