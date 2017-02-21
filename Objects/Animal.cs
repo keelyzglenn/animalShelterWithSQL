@@ -21,19 +21,23 @@ namespace AnimalShelter
       _breed = breed;
     }
 
-    // public override bool Equals(System.Object otherAnimal)
-    // {
-    //   if (!(otherAnimal is Animal))
-    //   {
-    //     return false;
-    //   }
-    //   else
-    //   {
-    //     Animal newAnimal = (Animal) otherAnimal;
-    //     bool descriptionEquality = (this.GetDescription() == newAnimal.GetDescription());
-    //     return (descriptionEquality);
-    //   }
-    // }
+    public override bool Equals(System.Object otherAnimal)
+    {
+      if (!(otherAnimal is Animal))
+      {
+        return false;
+      }
+      else
+      {
+        Animal newAnimal = (Animal) otherAnimal;
+        bool idEquality = this.GetId() == newAnimal.GetId();
+        bool nameEquality = (this.GetName() == newAnimal.GetName());
+        bool genderEquality = (this.GetGender() == newAnimal.GetGender());
+        bool dateEquality = (this.GetDate() == newAnimal.GetDate());
+        bool breedEquality = (this.GetBreed() == newAnimal.GetBreed());
+        return (idEquality && nameEquality && genderEquality && dateEquality && breedEquality);
+      }
+    }
 
     public int GetId()
     {

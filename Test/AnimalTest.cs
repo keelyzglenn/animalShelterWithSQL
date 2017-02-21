@@ -23,16 +23,16 @@ namespace AnimalShelter
       Assert.Equal(0, result);
     }
 
-    // [Fact]
-    // public void Test_Equal_ReturnsTrueIfDescriptionsAreTheSame()
-    // {
-    //   //Arrange, Act
-    //   Animal firstAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi");
-    //   Animal secondAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi");
-    //
-    //   //Assert
-    //   Assert.Equal(firstAnimal, secondAnimal);
-    // }
+    [Fact]
+    public void Test_Equal_ReturnsTrueIfDescriptionsAreTheSame()
+    {
+      //Arrange, Act
+      Animal firstAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi");
+      Animal secondAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi");
+
+      //Assert
+      Assert.Equal(firstAnimal, secondAnimal);
+    }
 
     public void Dispose()
     {
