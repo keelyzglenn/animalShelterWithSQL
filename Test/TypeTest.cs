@@ -96,6 +96,28 @@ namespace AnimalShelter
       Assert.Equal(testAnimalList, resultAnimalList);
     }
 
+    [Fact]
+    public void Test_SortByType()
+    {
+      //Arrange
+      Type testType1 = new Type("Dog");
+      Type testType2 = new Type("Cat");
+      Type testType3 = new Type("Bird");
+      testType1.Save();
+      testType2.Save();
+      testType3.Save();
+
+      //Act
+      List<Type> result = Type.OrderByType();
+      List<Type> testList = new List<Type>{testType3, testType2, testType1};
+      Console.WriteLine(result);
+      Console.WriteLine(testList);
+
+      //Assert
+      Assert.Equal(testList, result);
+    }
+
+
     public void Dispose()
     {
       Animal.DeleteAll();

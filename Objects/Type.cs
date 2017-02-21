@@ -141,6 +141,34 @@ namespace AnimalShelter
       }
       return foundType;
     }
+    //method for ordering by type
+    public static List<Type> OrderByType()
+    {
+      List<Type> allTypes = new List<Type>{};
+
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM type ORDER BY name;", conn);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        int typeId = rdr.GetInt32(0);
+        string typeName = rdr.GetString(1);
+        Type newType = new Type(typeName, typeId);
+        allTypes.Add(newType);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return allTypes;
+    }
 
     public List<Animal> GetAnimals()
    {
