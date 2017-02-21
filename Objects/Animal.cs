@@ -11,14 +11,26 @@ namespace AnimalShelter
     private string _date;
     private string _breed;
     private int _id;
+    private int _typeId;
 
-    public Animal(string name, string gender, string date, string breed, int Id = 0)
+    public Animal(string name, string gender, string date, string breed, int typeId, int Id = 0)
     {
       _id = Id;
       _name = name;
       _gender = gender;
       _date = date;
       _breed = breed;
+      _typeId = typeId;
+    }
+
+    public int GetTypeId()
+    {
+      return _typeId;
+    }
+
+    public void SetTypeId(int newTypeId)
+    {
+      _typeId = newTypeId;
     }
 
     public int GetId()
@@ -77,7 +89,8 @@ namespace AnimalShelter
         bool genderEquality = (this.GetGender() == newAnimal.GetGender());
         bool dateEquality = (this.GetDate() == newAnimal.GetDate());
         bool breedEquality = (this.GetBreed() == newAnimal.GetBreed());
-        return (idEquality && nameEquality && genderEquality && dateEquality && breedEquality);
+        bool typeEquality = this.GetTypeId() == newAnimal.GetTypeId();
+        return (idEquality && nameEquality && genderEquality && dateEquality && breedEquality && typeEquality);
       }
     }
     // get method to return all animals
@@ -98,7 +111,8 @@ namespace AnimalShelter
         string animalGender = rdr.GetString(2);
         string animalDate = rdr.GetString(3);
         string animalBreed = rdr.GetString(4);
-        Animal newAnimal = new Animal(animalName, animalGender, animalDate, animalBreed, animalId);
+        int animalTypeId = rdr.GetInt32(5);
+        Animal newAnimal = new Animal(animalName, animalGender, animalDate, animalBreed, animalTypeId, animalId);
         allAnimals.Add(newAnimal);
       }
 
@@ -119,7 +133,7 @@ namespace AnimalShelter
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO animals (name, gender, date, breed) OUTPUT INSERTED.id VALUES (@AnimalName, @AnimalGender, @AnimalDate, @AnimalBreed);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO animals (name, gender, date, breed, typeId) OUTPUT INSERTED.id VALUES (@AnimalName, @AnimalGender, @AnimalDate, @AnimalBreed, @AnimalTypeId);", conn);
 
       SqlParameter nameParameter = new SqlParameter();
       nameParameter.ParameterName = "@AnimalName";
@@ -137,11 +151,16 @@ namespace AnimalShelter
       breedParameter.ParameterName = "@AnimalBreed";
       breedParameter.Value = this.GetBreed();
 
+      SqlParameter typeParameter = new SqlParameter();
+      typeParameter.ParameterName = "@AnimalTypeId";
+      typeParameter.Value = this.GetTypeId();
+
 
       cmd.Parameters.Add(nameParameter);
       cmd.Parameters.Add(genderParameter);
       cmd.Parameters.Add(dateParameter);
       cmd.Parameters.Add(breedParameter);
+      cmd.Parameters.Add(typeParameter);
       SqlDataReader rdr = cmd.ExecuteReader();
 
       while(rdr.Read())
@@ -175,6 +194,7 @@ namespace AnimalShelter
       string foundAnimalGender = null;
       string foundAnimalDate = null;
       string foundAnimalBreed = null;
+      int foundTypeId = 0;
       while(rdr.Read())
       {
         foundAnimalId = rdr.GetInt32(0);
@@ -182,8 +202,9 @@ namespace AnimalShelter
         foundAnimalGender = rdr.GetString(2);
         foundAnimalDate = rdr.GetString(3);
         foundAnimalBreed = rdr.GetString(4);
+        foundTypeId = rdr.GetInt32(5);
       }
-      Animal foundAnimal = new Animal(foundAnimalName, foundAnimalGender, foundAnimalDate, foundAnimalBreed, foundAnimalId);
+      Animal foundAnimal = new Animal(foundAnimalName, foundAnimalGender, foundAnimalDate, foundAnimalBreed, foundTypeId, foundAnimalId);
 
       if (rdr != null)
       {

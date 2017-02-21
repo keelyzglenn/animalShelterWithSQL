@@ -27,8 +27,8 @@ namespace AnimalShelter
     public void Test_Equal_ReturnsTrueIfDescriptionsAreTheSame()
     {
       //Arrange, Act
-      Animal firstAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi");
-      Animal secondAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi");
+      Animal firstAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi", 1);
+      Animal secondAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi", 1);
 
       //Assert
       Assert.Equal(firstAnimal, secondAnimal);
@@ -38,7 +38,7 @@ namespace AnimalShelter
     public void Test_SaveToDatabase()
     {
       //Arrange
-      Animal testAnimal = new Animal ("Bob", "Male", "01.02.2017", "Corgi");
+      Animal testAnimal = new Animal ("Bob", "Male", "01.02.2017", "Corgi", 1);
 
       //Act
       testAnimal.Save();
@@ -53,7 +53,7 @@ namespace AnimalShelter
     public void Test_Save_AssignsIdToObjects()
     {
       //Arrange
-      Animal testAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi");
+      Animal testAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi", 1);
 
       //Act
       testAnimal.Save();
@@ -75,7 +75,7 @@ namespace AnimalShelter
     public void Test_Find_FindsAnimalInDatabase()
     {
       //Arrange
-      Animal testAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi");
+      Animal testAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi", 1);
       testAnimal.Save();
 
       //Act
