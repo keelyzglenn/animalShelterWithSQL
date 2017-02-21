@@ -84,5 +84,25 @@ namespace AnimalShelter
       //Assert
       Assert.Equal(testAnimal, foundAnimal);
     }
+    [Fact]
+   public void Test_SortByBreed()
+   {
+     //Arrange
+     Animal testAnimal1 = new Animal("Bob", "Male", "01.02.2017", "Corgi", 1);
+     Animal testAnimal2 = new Animal("Bob", "Male", "01.02.2017", "Westie", 1);
+     Animal testAnimal3 = new Animal("Bob", "Male", "01.02.2017", "Lab", 1);
+     testAnimal1.Save();
+     testAnimal2.Save();
+     testAnimal3.Save();
+
+     //Act
+     List<Animal> result = Animal.OrderByBreed();
+     List<Animal> testList = new List<Animal>{testAnimal1, testAnimal3, testAnimal2};
+     Console.WriteLine(result);
+     Console.WriteLine(testList);
+
+     //Assert
+     Assert.Equal(testList, result);
+   }
   }
 }

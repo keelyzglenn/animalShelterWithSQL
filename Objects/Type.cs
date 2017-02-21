@@ -73,7 +73,6 @@ namespace AnimalShelter
 
       return allTypes;
     }
-
     public void Save()
     {
       SqlConnection conn = DB.Connection();
