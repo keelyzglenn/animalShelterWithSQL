@@ -73,6 +73,8 @@ namespace AnimalShelter
     {
       _breed = newBreed;
     }
+
+// orders by breed
     public static List<Animal> OrderByBreed()
     {
       List<Animal> allAnimals = new List<Animal>{};
@@ -104,7 +106,38 @@ namespace AnimalShelter
       }
       return allAnimals;
     }
+    // order by date
+    public static List<Animal> OrderByDate()
+    {
+      List<Animal> allAnimals = new List<Animal>{};
 
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM animals ORDER BY date;", conn);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        int animalId = rdr.GetInt32(0);
+        string animalName = rdr.GetString(1);
+        string animalGender = rdr.GetString(2);
+        string animalDate = rdr.GetString(3);
+        string animalBreed = rdr.GetString(4);
+        int animalTypeId = rdr.GetInt32(5);
+        Animal newAnimal = new Animal(animalName, animalGender, animalDate, animalBreed, animalTypeId, animalId);
+        allAnimals.Add(newAnimal);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return allAnimals;
+    }
 
     // allows database data to be compared to entered data
     public override bool Equals(System.Object otherAnimal)
