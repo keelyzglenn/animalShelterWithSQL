@@ -49,9 +49,40 @@ namespace AnimalShelter
       Assert.Equal(testList, result);
     }
 
+    [Fact]
+    public void Test_Save_AssignsIdToObjects()
+    {
+      //Arrange
+      Animal testAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi");
+
+      //Act
+      testAnimal.Save();
+      Animal savedAnimal = Animal.GetAll()[0];
+
+      int result = savedAnimal.GetId();
+      int testId = testAnimal.GetId();
+
+      //Assert
+      Assert.Equal(testId, result);
+    }
+
     public void Dispose()
     {
       Animal.DeleteAll();
+    }
+
+    [Fact]
+    public void Test_Find_FindsAnimalInDatabase()
+    {
+      //Arrange
+      Animal testAnimal = new Animal("Bob", "Male", "01.02.2017", "Corgi");
+      testAnimal.Save();
+
+      //Act
+      Animal foundAnimal = Animal.Find(testAnimal.GetId());
+
+      //Assert
+      Assert.Equal(testAnimal, foundAnimal);
     }
   }
 }

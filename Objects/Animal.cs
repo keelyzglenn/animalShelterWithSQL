@@ -62,7 +62,7 @@ namespace AnimalShelter
       _breed = newBreed;
     }
 
-// allows database data to be compared to entered data
+    // allows database data to be compared to entered data
     public override bool Equals(System.Object otherAnimal)
     {
       if (!(otherAnimal is Animal))
@@ -80,7 +80,7 @@ namespace AnimalShelter
         return (idEquality && nameEquality && genderEquality && dateEquality && breedEquality);
       }
     }
-// get method to return all animals
+    // get method to return all animals
     public static List<Animal> GetAll()
     {
       List<Animal> allAnimals = new List<Animal>{};
@@ -113,50 +113,89 @@ namespace AnimalShelter
 
       return allAnimals;
     }
-// save method to save new object instances
-public void Save()
-{
-  SqlConnection conn = DB.Connection();
-  conn.Open();
+    // save method to save new object instances
+    public void Save()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
 
-  SqlCommand cmd = new SqlCommand("INSERT INTO animals (name, gender, date, breed) OUTPUT INSERTED.id VALUES (@AnimalName, @AnimalGender, @AnimalDate, @AnimalBreed);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO animals (name, gender, date, breed) OUTPUT INSERTED.id VALUES (@AnimalName, @AnimalGender, @AnimalDate, @AnimalBreed);", conn);
 
-  SqlParameter nameParameter = new SqlParameter();
-  nameParameter.ParameterName = "@AnimalName";
-  nameParameter.Value = this.GetName();
+      SqlParameter nameParameter = new SqlParameter();
+      nameParameter.ParameterName = "@AnimalName";
+      nameParameter.Value = this.GetName();
 
-  SqlParameter genderParameter = new SqlParameter();
-  genderParameter.ParameterName = "@AnimalGender";
-  genderParameter.Value = this.GetGender();
+      SqlParameter genderParameter = new SqlParameter();
+      genderParameter.ParameterName = "@AnimalGender";
+      genderParameter.Value = this.GetGender();
 
-  SqlParameter dateParameter = new SqlParameter();
-  dateParameter.ParameterName = "@AnimalDate";
-  dateParameter.Value = this.GetDate();
+      SqlParameter dateParameter = new SqlParameter();
+      dateParameter.ParameterName = "@AnimalDate";
+      dateParameter.Value = this.GetDate();
 
-  SqlParameter breedParameter = new SqlParameter();
-  breedParameter.ParameterName = "@AnimalBreed";
-  breedParameter.Value = this.GetBreed();
+      SqlParameter breedParameter = new SqlParameter();
+      breedParameter.ParameterName = "@AnimalBreed";
+      breedParameter.Value = this.GetBreed();
 
 
-  cmd.Parameters.Add(nameParameter);
-  cmd.Parameters.Add(genderParameter);
-  cmd.Parameters.Add(dateParameter);
-  cmd.Parameters.Add(breedParameter);
-  SqlDataReader rdr = cmd.ExecuteReader();
+      cmd.Parameters.Add(nameParameter);
+      cmd.Parameters.Add(genderParameter);
+      cmd.Parameters.Add(dateParameter);
+      cmd.Parameters.Add(breedParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
 
-  while(rdr.Read())
-  {
-    this._id = rdr.GetInt32(0);
-  }
-  if (rdr != null)
-  {
-    rdr.Close();
-  }
-  if (conn != null)
-  {
-    conn.Close();
-  }
-}
+      while(rdr.Read())
+      {
+        this._id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+    // this will find animals based on IDs
+    public static Animal Find(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM animals WHERE id = @AnimalId;", conn);
+      SqlParameter animalIdParameter = new SqlParameter();
+      animalIdParameter.ParameterName = "@AnimalId";
+      animalIdParameter.Value = id.ToString();
+      cmd.Parameters.Add(animalIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      int foundAnimalId = 0;
+      string foundAnimalName = null;
+      string foundAnimalGender = null;
+      string foundAnimalDate = null;
+      string foundAnimalBreed = null;
+      while(rdr.Read())
+      {
+        foundAnimalId = rdr.GetInt32(0);
+        foundAnimalName = rdr.GetString(1);
+        foundAnimalGender = rdr.GetString(2);
+        foundAnimalDate = rdr.GetString(3);
+        foundAnimalBreed = rdr.GetString(4);
+      }
+      Animal foundAnimal = new Animal(foundAnimalName, foundAnimalGender, foundAnimalDate, foundAnimalBreed, foundAnimalId);
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+
+      return foundAnimal;
+    }
 
     public static void DeleteAll()
     {
