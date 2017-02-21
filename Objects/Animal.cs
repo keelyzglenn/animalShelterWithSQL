@@ -21,24 +21,6 @@ namespace AnimalShelter
       _breed = breed;
     }
 
-    public override bool Equals(System.Object otherAnimal)
-    {
-      if (!(otherAnimal is Animal))
-      {
-        return false;
-      }
-      else
-      {
-        Animal newAnimal = (Animal) otherAnimal;
-        bool idEquality = this.GetId() == newAnimal.GetId();
-        bool nameEquality = (this.GetName() == newAnimal.GetName());
-        bool genderEquality = (this.GetGender() == newAnimal.GetGender());
-        bool dateEquality = (this.GetDate() == newAnimal.GetDate());
-        bool breedEquality = (this.GetBreed() == newAnimal.GetBreed());
-        return (idEquality && nameEquality && genderEquality && dateEquality && breedEquality);
-      }
-    }
-
     public int GetId()
     {
       return _id;
@@ -80,6 +62,24 @@ namespace AnimalShelter
       _breed = newBreed;
     }
 
+// allows database data to be compared to entered data
+    public override bool Equals(System.Object otherAnimal)
+    {
+      if (!(otherAnimal is Animal))
+      {
+        return false;
+      }
+      else
+      {
+        Animal newAnimal = (Animal) otherAnimal;
+        bool idEquality = this.GetId() == newAnimal.GetId();
+        bool nameEquality = (this.GetName() == newAnimal.GetName());
+        bool genderEquality = (this.GetGender() == newAnimal.GetGender());
+        bool dateEquality = (this.GetDate() == newAnimal.GetDate());
+        bool breedEquality = (this.GetBreed() == newAnimal.GetBreed());
+        return (idEquality && nameEquality && genderEquality && dateEquality && breedEquality);
+      }
+    }
 // get method to return all animals
     public static List<Animal> GetAll()
     {
@@ -113,7 +113,50 @@ namespace AnimalShelter
 
       return allAnimals;
     }
+// save method to save new object instances
+public void Save()
+{
+  SqlConnection conn = DB.Connection();
+  conn.Open();
 
+  SqlCommand cmd = new SqlCommand("INSERT INTO animals (name, gender, date, breed) OUTPUT INSERTED.id VALUES (@AnimalName, @AnimalGender, @AnimalDate, @AnimalBreed);", conn);
+
+  SqlParameter nameParameter = new SqlParameter();
+  nameParameter.ParameterName = "@AnimalName";
+  nameParameter.Value = this.GetName();
+
+  SqlParameter genderParameter = new SqlParameter();
+  genderParameter.ParameterName = "@AnimalGender";
+  genderParameter.Value = this.GetGender();
+
+  SqlParameter dateParameter = new SqlParameter();
+  dateParameter.ParameterName = "@AnimalDate";
+  dateParameter.Value = this.GetDate();
+
+  SqlParameter breedParameter = new SqlParameter();
+  breedParameter.ParameterName = "@AnimalBreed";
+  breedParameter.Value = this.GetBreed();
+
+
+  cmd.Parameters.Add(nameParameter);
+  cmd.Parameters.Add(genderParameter);
+  cmd.Parameters.Add(dateParameter);
+  cmd.Parameters.Add(breedParameter);
+  SqlDataReader rdr = cmd.ExecuteReader();
+
+  while(rdr.Read())
+  {
+    this._id = rdr.GetInt32(0);
+  }
+  if (rdr != null)
+  {
+    rdr.Close();
+  }
+  if (conn != null)
+  {
+    conn.Close();
+  }
+}
 
     public static void DeleteAll()
     {
